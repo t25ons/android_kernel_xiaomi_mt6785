@@ -3789,14 +3789,12 @@ void DSI_PHY_TIMCONFIG(enum DISP_MODULE_ENUM module, struct cmdqRecStruct *cmdq,
 {
 	int i = 0;
 	DISPFUNCSTART();
-	DDPDUMP("===>DSI_PHY_TIMCONFIG \n");
 	for (i = DSI_MODULE_BEGIN(module); i <= DSI_MODULE_END(module); i++) {
 		if (_dsi_context[i].dsi_params.IsCphy)
 			DSI_CPHY_TIMCONFIG(module, cmdq, dsi_params);
 		else
 			DSI_DPHY_TIMCONFIG(module, cmdq, dsi_params);
 	}
-	DDPDUMP("<===DSI_PHY_TIMCONFIG \n");
 }
 
 int DSI_enable_checksum(enum DISP_MODULE_ENUM module,
