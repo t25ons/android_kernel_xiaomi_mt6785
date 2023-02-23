@@ -8,6 +8,7 @@
 
 #include "display_recorder.h"
 #include "ddp_debug.h"
+#ifdef CONFIG_MTK_AEE_AED
 #ifdef CONFIG_MTK_AEE_FEATURE
 #include "mt-plat/aee.h"
 #endif
@@ -108,6 +109,7 @@
 #ifndef CONFIG_MTK_AEE_FEATURE
 # define aee_kernel_warning_api(...)
 # define aee_kernel_exception(...)
+#endif
 #endif
 
 #define disp_aee_print(string, args...)					\
