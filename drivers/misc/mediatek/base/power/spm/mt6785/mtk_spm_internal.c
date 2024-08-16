@@ -216,23 +216,15 @@ unsigned int __spm_output_wake_reason(
 
 	if (wakesta->is_abort != 0) {
 		/* add size check for vcoredvfs */
-		aee_sram_printk("SPM ABORT (%s), r13 = 0x%x, ",
-			scenario, wakesta->r13);
 		printk_deferred("[name:spm&][SPM] ABORT (%s), r13 = 0x%x, ",
 			scenario, wakesta->r13);
 
-		aee_sram_printk(" debug_flag = 0x%x 0x%x\n",
-			wakesta->debug_flag, wakesta->debug_flag1);
 		printk_deferred("[name:spm&][SPM] debug_flag = 0x%x 0x%x\n",
 			wakesta->debug_flag, wakesta->debug_flag1);
 
-		aee_sram_printk(" sw_flag = 0x%x 0x%x\n",
-			wakesta->sw_flag0, wakesta->sw_flag1);
 		printk_deferred("[name:spm&][SPM] sw_flag = 0x%x 0x%x\n",
 			wakesta->sw_flag0, wakesta->sw_flag1);
 
-		aee_sram_printk(" b_sw_flag = 0x%x 0x%x\n",
-			wakesta->b_sw_flag0, wakesta->b_sw_flag1);
 		printk_deferred("[name:spm&][SPM] b_sw_flag = 0x%x 0x%x\n",
 			wakesta->b_sw_flag0, wakesta->b_sw_flag1);
 
@@ -385,12 +377,7 @@ unsigned int __spm_output_wake_reason(
 
 	WARN_ON(log_size >= 1024);
 
-	if (!suspend)
-		printk_deferred("[name:spm&][SPM] %s", log_buf);
-	else {
-		aee_sram_printk("%s", log_buf);
-		printk_deferred("[name:spm&][SPM] %s", log_buf);
-	}
+	printk_deferred("[name:spm&][SPM] %s", log_buf);
 
 	return wr;
 }
@@ -429,7 +416,6 @@ u32 __spm_get_wake_period(int pwake_time, unsigned int last_wr)
 		}
 	} else {
 		period = pwake_time;
-		aee_sram_printk("pwake = %d\n", pwake_time);
 		printk_deferred("[name:spm&][SPM] pwake = %d\n", pwake_time);
 	}
 
