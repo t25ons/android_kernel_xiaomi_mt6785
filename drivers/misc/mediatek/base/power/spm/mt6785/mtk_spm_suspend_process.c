@@ -82,8 +82,6 @@ void spm_set_sysclk_settle(void)
 	settle = spm_read(SPM_CLK_SETTLE);
 
 	/* md_settle is keyword for suspend status */
-	aee_sram_printk("md_settle = %u, settle = %u\n",
-		SPM_SYSCLK_SETTLE, settle);
 	printk_deferred("[name:spm&][SPM] md_settle = %u, settle = %u\n",
 		SPM_SYSCLK_SETTLE, settle);
 }
@@ -99,8 +97,6 @@ static void spm_dump_pmic_reg(void)
 
 	for (i = 0; i < ARRAY_SIZE(pmic_reg); i++) {
 		ret = pmic_read_interface_nolock(pmic_reg[i], &val, 0xffff, 0);
-		aee_sram_printk("#@# %s(%d) pmic reg(0x%x) = 0x%x\n",
-			__func__, __LINE__, pmic_reg[i], val);
 		printk_deferred("[name:spm&][SPM] #@# %s(%d) pmic reg(0x%x) = 0x%x\n",
 			__func__, __LINE__, pmic_reg[i], val);
 	}
@@ -134,7 +130,6 @@ void spm_suspend_pre_process(int cmd, struct pwr_ctrl *pwrctrl)
 
 	ret = spm_to_sspm_command(cmd, &spm_d);
 	if (ret < 0) {
-		aee_sram_printk("ret %d", ret);
 		printk_deferred("[name:spm&][SPM] ret %d", ret);
 	}
 #endif /* CONFIG_MTK_TINYSYS_SSPM_SUPPORT */
@@ -167,7 +162,6 @@ void spm_suspend_post_process(int cmd, struct pwr_ctrl *pwrctrl)
 
 	ret = spm_to_sspm_command(cmd, &spm_d);
 	if (ret < 0) {
-		aee_sram_printk("ret %d", ret);
 		printk_deferred("[name:spm&][SPM] ret %d", ret);
 	}
 #endif /* CONFIG_MTK_TINYSYS_SSPM_SUPPORT */

@@ -138,10 +138,6 @@ struct pwr_ctrl pwrctrl_suspend;
 
 static inline void spm_suspend_footprint(enum spm_suspend_step step)
 {
-#ifdef CONFIG_MTK_RAM_CONSOLE
-	aee_rr_rec_spm_suspend_val(step |
-		(smp_processor_id() << CPU_FOOTPRINT_SHIFT));
-#endif
 }
 
 static void spm_trigger_wfi_for_sleep(struct pwr_ctrl *pwrctrl)
@@ -162,7 +158,6 @@ static void spm_trigger_wfi_for_sleep(struct pwr_ctrl *pwrctrl)
 		mtk8250_restore_dev();
 
 	if (spm_dormant_sta < 0) {
-		aee_sram_printk("spm_dormant_sta %d", spm_dormant_sta);
 		printk_deferred("[name:spm&][SPM] spm_dormant_sta %d"
 			, spm_dormant_sta);
 	}
@@ -244,13 +239,9 @@ static unsigned int spm_output_wake_reason(unsigned int ex_flag,
 	if (log_wakesta_index >= 0xFFFFFFF0)
 		log_wakesta_index = 0;
 
-	aee_sram_printk("dormant = %d, sleep_count = %d\n",
-		spm_dormant_sta, spm_sleep_count);
 	printk_deferred("[name:spm&][SPM] dormant = %d, sleep_count = %d\n",
 		spm_dormant_sta, spm_sleep_count);
 	if (spm_ap_mdsrc_req_cnt != 0) {
-		aee_sram_printk("warning: spm_ap_mdsrc_req_cnt = %d, ",
-			spm_ap_mdsrc_req_cnt);
 		printk_deferred("[name:spm&][SPM ]warning: spm_ap_mdsrc_req_cnt = %d, ",
 			spm_ap_mdsrc_req_cnt);
 	}
@@ -397,9 +388,6 @@ unsigned int spm_go_to_sleep_ex(unsigned int ex_flag)
 
 	mtk_spm_irq_backup();
 
-	aee_sram_printk("sec = %u, wakesrc = 0x%x (%u)(%u)\n",
-		  sec, pwrctrl->wake_src, is_cpu_pdn(pwrctrl->pcm_flags),
-		  is_infra_pdn(pwrctrl->pcm_flags));
 	printk_deferred("[name:spm&][SPM] sec = %u, wakesrc = 0x%x (%u)(%u)\n",
 		  sec, pwrctrl->wake_src, is_cpu_pdn(pwrctrl->pcm_flags),
 		  is_infra_pdn(pwrctrl->pcm_flags));
@@ -488,8 +476,6 @@ RESTORE_IRQ:
 	spm_suspend_footprint(0);
 
 	if (pwrctrl->wakelock_timer_val) {
-		aee_sram_printk("#@# %s(%d) calling spm_pm_stay_awake()\n",
-			__func__, __LINE__);
 		printk_deferred("[name:spm&][SPM ]#@# %s(%d) calling spm_pm_stay_awake()\n",
 			__func__, __LINE__);
 		spm_pm_stay_awake(pwrctrl->wakelock_timer_val);
