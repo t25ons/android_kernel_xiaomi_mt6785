@@ -11,7 +11,6 @@
 #define ENABLE_MPU	1
 #define ENABLE_ELM	1
 #define ENABLE_MBW	0
-#define DECS_ON_SSPM
 #define MPU_BYPASS
 /* #define ENABLE_BWL_CONFIG */
 /* #define ENABLE_MPU_SLVERR */
@@ -27,7 +26,7 @@
 #define ENABLE_AP_REGION	1
 #define AP_REGION_ID		31
 
-#define DBG_INFO_READY       1
+#define DBG_INFO_READY       0
 #define EMI_MPUD0_ST		(CEN_EMI_BASE + 0x160)
 #define EMI_MPUD_ST(domain)	(EMI_MPUD0_ST + (4*domain))
 #define EMI_MPUD0_ST2		(CEN_EMI_BASE + 0x200)
