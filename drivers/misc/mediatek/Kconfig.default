@@ -14,7 +14,6 @@ config ANDROID_DEFAULT_SETTING
 	select BLK_DEV_DM
 	select BLK_DEV_INITRD
 	select BLK_DEV_LOOP
-	select BLK_DEV_RAM
 	select BLOCK
 	select BPF_LSM
 	select BPF_JIT
