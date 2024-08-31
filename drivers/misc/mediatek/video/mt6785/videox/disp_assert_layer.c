@@ -321,6 +321,7 @@ enum DAL_STATUS DAL_OnDispPowerOn(void)
 
 #else /* !CONFIG_MTK_FB_SUPPORT_ASSERTION_LAYER */
 
+#define NOT_REFERENCED(x)   { (x) = (x); }
 unsigned int isAEEEnabled;
 
 uint32_t DAL_GetLayerSize(void)
