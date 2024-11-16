@@ -919,3 +919,9 @@ $(MODULE_NAME)-objs  += $(NAN_SEC_OBJS)
 ifneq ($(findstring UT_TEST_MODE,$(MTK_COMBO_CHIP)),)
 include $(src)/test/ut.make
 endif
+
+#IKSWR-110533 reduce the log for ellis user version.
+ifeq ($(TARGET_BUILD_VARIANT),user)
+ccflags-y += -DDBG_LOG_LEVEL_LESS
+endif
+#IKSWR-110533 end.
