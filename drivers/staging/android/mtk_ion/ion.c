@@ -1195,39 +1195,17 @@ void ion_client_destroy(struct ion_client *client)
 	struct ion_device *dev = client->dev;
 	struct rb_node *n;
 	struct task_struct *task = current->group_leader;
-	char task_comm[TASK_COMM_LEN];
-	pid_t pid;
-	unsigned long long time_s, time_e_lock, time_e_unlock;
 
-	pr_debug("%s: %d\n", __func__, __LINE__);
-	get_task_comm(task_comm, task);
-	pid = task_pid_nr(task);
-	time_s = sched_clock();
 	while ((n = rb_first(&client->handles))) {
 		struct ion_handle *handle = rb_entry(n, struct ion_handle,
 						     node);
 
 		mutex_lock(&client->lock);
-		IONMSG("%s:hdl=%p,buf=%p,sz=%zu,ref=%d,kmp=%d\n",
-		       __func__, handle, handle->buffer,
-		       handle->buffer->size,
-		       atomic_read(&handle->buffer->ref.refcount.refs),
-		       handle->buffer->kmap_cnt);
-		IONMSG("%s:client=%s,disp=%s,dbg=%s\n",
-		       __func__, client->name ? client->name : NULL,
-		       client->display_name ? client->display_name : NULL,
-		       client->dbg_name);
 		ion_handle_destroy(&handle->ref);
 		mutex_unlock(&client->lock);
 	}
 
 	idr_destroy(&client->idr);
-
-	time_e_unlock = sched_clock();
-	if ((time_e_unlock - time_s) > 50000000) // 50ms
-		IONMSG("%s unlock warnning, time:%llu, task:%s (%d)\n",
-		       __func__, (time_e_unlock - time_s),
-		       task_comm, pid);
 
 	down_write(&dev->lock);
 	if (client->task)
@@ -1240,12 +1218,6 @@ void ion_client_destroy(struct ion_client *client)
 	proc_remove(client->proc_root);
 #endif
 	up_write(&dev->lock);
-
-	time_e_lock = sched_clock();
-	if ((time_e_lock - time_s) > 100000000) // 100ms
-		IONMSG("%s warnning, time:%llu, task:%s (%d)\n",
-		       __func__, (time_e_lock - time_s),
-		       task_comm, pid);
 
 	kfree(client->display_name);
 	kfree(client->name);
