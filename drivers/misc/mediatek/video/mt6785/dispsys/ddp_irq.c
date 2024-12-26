@@ -28,11 +28,6 @@
 #include "ddp_misc.h"
 #include "disp_recovery.h"
 
-/* IRQ log print kthread */
-static struct task_struct *disp_irq_log_task;
-static wait_queue_head_t disp_irq_log_wq;
-static int disp_irq_log_module;
-
 static int irq_init;
 
 static unsigned int cnt_ovl_underflow[OVL_NUM];
@@ -328,7 +323,6 @@ irqreturn_t disp_irq_handler(int irq, void *dev_id)
 			DDP_PR_ERR("IRQ: WDMA%d underrun! cnt=%d\n",
 				   index, cnt_wdma_underflow[index]);
 			cnt_wdma_underflow[index]++;
-			disp_irq_log_module |= 1 << module;
 		}
 		mmprofile_log_ex(ddp_mmp_get_events()->WDMA_IRQ[index],
 				 MMPROFILE_FLAG_PULSE, reg_val,
@@ -400,7 +394,6 @@ irqreturn_t disp_irq_handler(int irq, void *dev_id)
 			DDP_PR_ERR("IRQ: RDMA%d abnormal! cnt=%d\n",
 				   index, cnt_rdma_abnormal[index]);
 			cnt_rdma_abnormal[index]++;
-			disp_irq_log_module |= 1 << module;
 		}
 		if (reg_val & (1 << 4)) {
 			mmprofile_log_ex(
@@ -425,7 +418,6 @@ irqreturn_t disp_irq_handler(int irq, void *dev_id)
 
 			cnt_rdma_underflow[index]++;
 			rdma_underflow_irq_cnt[index]++;
-			disp_irq_log_module |= 1 << module;
 
 			primary_display_diagnose_oneshot(__func__, __LINE__);
 		}
@@ -545,14 +537,13 @@ irqreturn_t disp_irq_handler(int irq, void *dev_id)
 	}
 
 	disp_invoke_irq_callbacks(module, reg_val);
-	if (disp_irq_log_module)
-		wake_up_interruptible(&disp_irq_log_wq);
 
 	mmprofile_log_ex(ddp_mmp_get_events()->DDP_IRQ, MMPROFILE_FLAG_END,
 			 irq, reg_val);
 	return IRQ_HANDLED;
 }
 
+#if 0
 static int disp_irq_log_kthread_func(void *data)
 {
 	unsigned int i = 0;
@@ -570,6 +561,7 @@ static int disp_irq_log_kthread_func(void *data)
 	}
 	return 0;
 }
+#endif
 
 int disp_init_irq(void)
 {
@@ -578,13 +570,6 @@ int disp_init_irq(void)
 
 	irq_init = 1;
 	DDPMSG("%s\n", __func__);
-
-	/* create irq log thread */
-	init_waitqueue_head(&disp_irq_log_wq);
-	disp_irq_log_task = kthread_create(disp_irq_log_kthread_func,
-					   NULL, "ddp_irq_log_kthread");
-	if (IS_ERR(disp_irq_log_task))
-		DDP_PR_ERR("can not create disp_irq_log_task kthread\n");
 
 	/* wake_up_process(disp_irq_log_task); */
 	return 0;
