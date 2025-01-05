@@ -123,6 +123,7 @@ static int log_read_line(struct tz_log_state *s, int put, int get)
 
 static void tz_driver_dump_logs(struct tz_log_state *s)
 {
+#if 0
 	struct log_rb *log = s->log;
 	struct boot_log_rb *boot_log = s->boot_log;
 	uint32_t get, put, alloc;
@@ -202,6 +203,7 @@ static void tz_driver_dump_logs(struct tz_log_state *s)
 #endif
 	}
 	s->get = get;
+#endif
 }
 
 #ifdef CONFIG_MICROTRUST_TZ_LOG
@@ -235,6 +237,7 @@ int teei_log_fn(void *work)
 static int tz_log_panic_notify(struct notifier_block *nb,
 				   unsigned long action, void *data)
 {
+#if 0
 	struct tz_log_state *s;
 
 	/*
@@ -244,6 +247,7 @@ static int tz_log_panic_notify(struct notifier_block *nb,
 	s = container_of(nb, struct tz_log_state, panic_notifier);
 	IMSG_INFO("tz log panic notifier\n");
 	tz_driver_dump_logs(s);
+#endif
 	return NOTIFY_OK;
 }
 
