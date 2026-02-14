@@ -108,13 +108,15 @@ extern void set_ln8000_load_flag(bool lnflag);
 static int ln8000_read_reg(struct ln8000_info *info, u8 addr, void *data)
 {
     int i, ret = 0;
+    unsigned int val;
 
     mutex_lock(&info->i2c_lock);
     for (i=0; i < I2C_RETRY_CNT; ++i) {
-        ret = regmap_read(info->regmap, addr, data);
+        ret = regmap_read(info->regmap, addr, &val);
         if (IS_ERR_VALUE((unsigned long)ret)) {
             ln_info("failed-read, reg(0x%02X), ret(%d)\n", addr, ret);
         } else {
+            *(u8 *)data = (u8)val; // Copy down 1 byte
             break;
         }
     }
