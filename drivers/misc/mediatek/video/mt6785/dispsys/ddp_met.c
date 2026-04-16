@@ -144,9 +144,6 @@ static void ddp_disp_refresh_tag_start(unsigned int index)
 				   &(old_ovlInfo[layer_idx]),
 				   sizeof(struct OVL_BASIC_STRUCT)) == 0)
 				continue;
-
-			if (ovlInfo[layer_idx].layer_en)
-				b_layer_changed = 1;
 		}
 
 		/* store old value */

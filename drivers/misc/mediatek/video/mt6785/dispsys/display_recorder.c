@@ -1576,6 +1576,11 @@ char *get_dprec_status_ptr(int buffer_idx)
 	return NULL;
 }
 
+int debug_buffer_size(void)
+{
+	return 1024;
+}
+
 char *debug_buffer;
 bool is_buffer_init;
 
