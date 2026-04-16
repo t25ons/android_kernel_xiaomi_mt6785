@@ -101,12 +101,10 @@ static void ddp_disp_refresh_tag_start(unsigned int index)
 {
 	static unsigned long sBufAddr[RDMA_NUM];
 	static struct RDMA_BASIC_STRUCT rdmaInfo;
-	char tag_name[30] = { '\0' };
 	static struct OVL_BASIC_STRUCT old_ovlInfo[4+2+2];
 	static struct OVL_BASIC_STRUCT ovlInfo[4+2+2];
 	int layer_idx = -1;
 	int layer_pos = 0;
-	int b_layer_changed = 0;
 	int i, j;
 
 	if (dpp_disp_is_decouple() == 1) {
@@ -114,15 +112,6 @@ static void ddp_disp_refresh_tag_start(unsigned int index)
 		if (rdmaInfo.addr == 0 || (rdmaInfo.addr != 0 &&
 					   sBufAddr[index] != rdmaInfo.addr)) {
 			sBufAddr[index] = rdmaInfo.addr;
-			sprintf(tag_name, index ?  "ExtDispRefresh" :
-				"PrimDispRefresh");
-
-			preempt_disable();
-			event_trace_printk(disp_get_tracing_mark(),
-								"C|%d|%s|%d\n",
-								DDP_IRQ_FPS_ID,
-								tag_name, 1);
-			preempt_enable();
 		}
 		return;
 	}
@@ -150,43 +139,14 @@ static void ddp_disp_refresh_tag_start(unsigned int index)
 		memcpy(&(old_ovlInfo[layer_pos]), &(ovlInfo[layer_pos]),
 		      ovl_infos[i].layer_num * sizeof(struct OVL_BASIC_STRUCT));
 	}
-
-	if (b_layer_changed) {
-		sprintf(tag_name, index ? "ExtDispRefresh" : "PrimDispRefresh");
-		preempt_disable();
-		event_trace_printk(disp_get_tracing_mark(),
-							"C|%d|%s|%d\n",
-							DDP_IRQ_FPS_ID,
-							tag_name, 1);
-		preempt_enable();
-	}
 }
 
 static void ddp_disp_refresh_tag_end(unsigned int index)
 {
-	char tag_name[30] = { '\0' };
-
-	sprintf(tag_name, index ?  "ExtDispRefresh" : "PrimDispRefresh");
-	preempt_disable();
-	event_trace_printk(disp_get_tracing_mark(),
-						"C|%d|%s|%d\n",
-						DDP_IRQ_FPS_ID,
-						tag_name, 0);
-	preempt_enable();
 }
 
 static void ddp_err_irq_met_tag(const char *name)
 {
-	preempt_disable();
-	event_trace_printk(disp_get_tracing_mark(),
-						"C|%d|%s|%d\n",
-						DDP_IRQ_EER_ID,
-						name, 1);
-	event_trace_printk(disp_get_tracing_mark(),
-						"C|%d|%s|%d\n",
-						DDP_IRQ_EER_ID,
-						name, 0);
-	preempt_enable();
 }
 
 static void met_irq_handler(enum DISP_MODULE_ENUM module, unsigned int reg_val)
