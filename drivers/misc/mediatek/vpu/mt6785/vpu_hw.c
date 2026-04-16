@@ -36,7 +36,7 @@
 #include <mt-plat/mtk_perfobserver.h>
 #endif
 
-#define VPU_TRACE_ENABLED
+//#define VPU_TRACE_ENABLED
 
 /* #define BYPASS_M4U_DBG */
 
