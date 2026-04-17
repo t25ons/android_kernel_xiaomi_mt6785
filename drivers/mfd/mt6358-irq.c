@@ -18,7 +18,7 @@
 #include <linux/regmap.h>
 #include <linux/wakeup_reason.h>
 
-#define DEBUG_PMIC_IRQ	1
+#define DEBUG_PMIC_IRQ	0
 
 struct irq_top_t {
 	int hwirq_base;
