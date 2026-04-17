@@ -15,7 +15,6 @@
 #include "vpu_cfg.h"
 #include "vpu_dump.h"
 #include "vpu_hw.h"
-#include <plat_debug_api.h>
 
 #define INFRA_CFG 0x10001000
 #define SLEEP 0x10006000
@@ -314,9 +313,6 @@ int vpu_dmp_create_locked(int c, struct vpu_request *req,
 	VPU_DMP_IO(gals);
 	VPU_DMP_IO(smi_cmn0);
 	VPU_DMP_IO(smi_cmn1);
-
-	dump_emi_outstanding();
-	VPU_DMP_STATE("emi");
 
 	VPU_DMP_IO(ipu_conn);
 	VPU_DMP_IO(ipu_vcore);
