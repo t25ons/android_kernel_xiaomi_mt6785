@@ -55,9 +55,11 @@ struct kernel_info {
 
 	/* For module kallsyms */
 	__u32 enabled_modules_tree_lookup;
+#ifdef CONFIG_MODULES
 	__u32 mod_core_layout_offset;
 	__u32 mod_init_layout_offset;
 	__u32 mod_kallsyms_offset;
+#endif
 } __packed;
 
 struct kernel_all_info {
