@@ -14,7 +14,9 @@
 #if IS_ENABLED(CONFIG_PM_WAKELOCKS)
 #include <linux/pm_wakeup.h>
 #endif
+#ifdef CONFIG_MTK_AEE_FEATURE
 #include <mt-plat/aee.h>
+#endif
 #include "adsp_reg.h"
 #include "adsp_core.h"
 #include "adsp_clk.h"
@@ -71,6 +73,7 @@ static inline u32 copy_from_adsp_shared_memory(void *buf, u32 offset,
 	return copy_from_buffer(buf, -1, mem_addr, mem_size, offset, size);
 }
 
+#ifdef CONFIG_MTK_AEE_FEATURE
 static u32 dump_adsp_internal_mem(struct adsp_priv *pdata,
 				  void *buf, size_t size)
 {
@@ -148,9 +151,11 @@ static int dump_buffer(struct adsp_exception_control *ctrl, int coredump_id)
 		 __func__, total, buf, n);
 	return n;
 }
+#endif
 
 static void adsp_exception_dump(struct adsp_exception_control *ctrl)
 {
+#ifdef CONFIG_MTK_AEE_FEATURE
 	char detail[ADSP_AED_STR_LEN];
 	int db_opt = DB_OPT_DEFAULT;
 	char *aed_type;
@@ -215,6 +220,7 @@ static void adsp_exception_dump(struct adsp_exception_control *ctrl)
 	/* adsp aed api, only detail information available*/
 	aed_common_exception_api("adsp", (const int *)coredump, coredump_size,
 				 NULL, 0, detail, db_opt);
+#endif
 }
 
 void adsp_aed_worker(struct work_struct *ws)
@@ -263,11 +269,13 @@ void adsp_aed_worker(struct work_struct *ws)
 
 	if (ret) {
 		pr_info("%s, adsp dead, wait dump dead body", __func__);
+#ifdef CONFIG_MTK_AEE_FEATURE
 		aee_kernel_exception_api(__FILE__,
 					 __LINE__,
 					 DB_OPT_DEFAULT,
 					 "[ADSP]",
 					 "ASSERT: ADSP DEAD! Recovery Fail");
+#endif
 
 		/* BUG_ON(1); */
 	}
@@ -400,6 +408,7 @@ EXPORT_SYMBOL(get_adsp_misc_buffer);
 
 void get_adsp_aee_buffer(unsigned long *vaddr, unsigned long *size)
 {
+#ifdef CONFIG_MTK_AEE_FEATURE
 	u32 clk_cfg = 0, uart_cfg = 0, n = 0;
 	u32 clk_mask = ADSP_CLK_UART_EN | ADSP_CLK_CORE_0_EN;
 	u32 uart_mask = ADSP_UART_RST_N | ADSP_UART_BCLK_CG;
@@ -437,6 +446,7 @@ void get_adsp_aee_buffer(unsigned long *vaddr, unsigned long *size)
 	/* return value */
 	*vaddr = (unsigned long)buf;
 	*size = len;
+#endif
 }
 EXPORT_SYMBOL(get_adsp_aee_buffer);
 
@@ -473,12 +483,16 @@ static ssize_t adsp_dump_ke_show(struct file *filep, struct kobject *kobj,
 				struct bin_attribute *attr,
 				char *buf, loff_t offset, size_t size)
 {
+#ifdef CONFIG_MTK_AEE_FEATURE
 	unsigned long tmp[2];
+#endif
 	ssize_t n = 0;
 	ssize_t threshold[2];
 
+#ifdef CONFIG_MTK_AEE_FEATURE
 	if (offset == 0) /* only do ke ramdump once at start */
 		get_adsp_aee_buffer(&tmp[0], &tmp[1]);
+#endif
 
 	threshold[0] = ADSP_KE_DUMP_LEN;
 	threshold[1] = threshold[0] +
