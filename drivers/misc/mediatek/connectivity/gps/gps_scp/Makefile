@@ -10,7 +10,6 @@
 # published by the Free Software Foundation.
 
 ###############################################################################
-$(warning GPS_CHIP_ID != common)
 ifeq ($(CONFIG_MTK_GPS_SUPPORT), y)
 
 ifndef TOP
@@ -34,7 +33,6 @@ $(MODULE_NAME)-objs += gps2scp.o
 ifeq ($(GPS2SCP_TEST_SUPPORT),y)
 ccflags-y += -DGPS2SCP_TEST_ENABLE
 endif
-$(warning gps_scp has been build)
 
 endif #ifeq ($(CONFIG_MTK_GPS_SUPPORT), y)
 # EOF

@@ -86,7 +86,6 @@ endif
 
 ifeq ($(CONFIG_MTK_TINYSYS_SSPM_VERSION), "v1")
 ccflags-y += -D CONFIG_MTK_TINYSYS_SSPM_V1
-$(warning "use CONFIG_MTK_TINYSYS_SSPM_V1")
 endif
 
 # main
