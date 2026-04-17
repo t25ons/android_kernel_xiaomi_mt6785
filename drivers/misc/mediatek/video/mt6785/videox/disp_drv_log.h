@@ -106,12 +106,30 @@
 
 #define DISPPR_HWOP(string, args...)
 
+#else
+#define DISP_LOG_PRINT(level, sub_module, fmt, args...)	((void)0)
+#define DISPINFO(string, args...)	((void)0)
+#define DISPMSG(string, args...)	((void)0)
+#define DISPCHECK(string, args...)	((void)0)
+#define DISP_ONESHOT_DUMP(string, args...)	((void)0)
+#define DISP_PR_INFO(string, args...)	((void)0)
+#define DISPWARN(string, args...)	((void)0)
+#define DISPERR(string, args...)	((void)0)
+#define DISP_PR_ERR(string, args...)	((void)0)
+#define DISPFENCE(string, args...)	((void)0)
+#define DISPDBG(string, args...)	((void)0)
+#define DISPFUNC()	((void)0)
+#define DISPFUNCSTART()	((void)0)
+#define DISPFUNCEND()	((void)0)
+#define DISPDBGFUNC() ((void)0)
+#endif
+
 #ifndef CONFIG_MTK_AEE_FEATURE
 # define aee_kernel_warning_api(...)
 # define aee_kernel_exception(...)
 #endif
-#endif
 
+#ifdef CONFIG_MTK_AEE_AED
 #define disp_aee_print(string, args...)					\
 	do {								\
 		char disp_name[100];					\
@@ -137,5 +155,18 @@
 		else							\
 			DISPFENCE(string, ##args);			\
 	} while (0)
+#else
+#define disp_aee_print(string, args...)					\
+	do {								\
+		pr_err("DISP error: "string, ##args);			\
+	} while (0)
+
+# define disp_aee_db_print(string, args...)				\
+	do {								\
+		pr_err("DISP error:"string, ##args);			\
+	} while (0)
+
+#define _DISP_PRINT_FENCE_OR_ERR(is_err, string, args...) ((void)0)
+#endif
 
 #endif /* __DISP_DRV_LOG_H__ */
