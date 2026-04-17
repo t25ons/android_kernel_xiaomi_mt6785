@@ -103,6 +103,7 @@ static ssize_t teei_log_level_store(struct device *dev,
 				struct device_attribute *attr,
 				const char *buf, size_t len)
 {
+#ifdef CONFIG_MICROTRUST_TZ_LOG
 	unsigned long new;
 	int retVal = 0;
 
@@ -119,6 +120,7 @@ static ssize_t teei_log_level_store(struct device *dev,
 	else
 		TEEI_log_level = new;
 
+#endif
 	return len;
 }
 static DEVICE_ATTR_RW(teei_log_level);
