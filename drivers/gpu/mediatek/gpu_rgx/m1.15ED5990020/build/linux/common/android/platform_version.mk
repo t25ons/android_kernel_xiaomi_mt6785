@@ -64,8 +64,6 @@ endef
 # If there's no build.prop file in the expected location, bail out.
 #
 ifeq ($(wildcard $(BUILD_PROP)),)
-$(warning *** $(BUILD_PROP) not found!!)
-$(warning *** Did you set ANDROID_ROOT and TARGET_DEVICE in your \
 environment correctly?)
 $(error Error reading $(BUILD_PROP))
 endif
@@ -77,7 +75,6 @@ $(eval $(subst #,$(newline),$(shell cat $(BUILD_PROP) | \
 
 ifeq ($(PLATFORM_RELEASE),)
 
-$(warning PLATFORM_RELEASE was not set. Attempting to determine version using \
 build.prop.)
 
 # Extract version.release and version.codename from the build.prop file.
@@ -249,7 +246,6 @@ ifneq ($(NDK_ROOT),)
  # be available.
  override TARGET_PLATFORM := android-$(API_LEVEL)
  ifeq ($(strip $(wildcard $(NDK_PLATFORMS_ROOT)/$(TARGET_PLATFORM))),)
-   $(info NDK support for $(TARGET_PLATFORM) is missing)
    ifeq ($(strip $(wildcard $(NDK_PLATFORMS_ROOT)/android-$(PLATFORM_CODENAME)))),)
     $(error NDK support for android-$(PLATFORM_CODENAME) is missing)
    endif
@@ -261,9 +257,7 @@ endif
 # Warn if a different platform version is used.
 #
 ifeq ($(is_future_version),1)
-$(info WARNING: Android version is newer than this DDK supports)
 else ifneq ($(is_at_least_marshmallow),1)
-$(info WARNING: Android version is older than this DDK supports)
 endif
 
 endif # !__included_platform_version_mk

@@ -51,9 +51,6 @@ define calculate-compiler-preferred-target
   # Remove the 'unknown' substring from triple string to behave the same as before clang 8.
   $(1)_compiler_preferred_target := $$(subst --,-,$$(subst unknown,,$$(shell $(2) -dumpmachine)))
   ifeq ($$($(1)_compiler_preferred_target),)
-   $$(warning No output from '$(2) -dumpmachine')
-   $$(warning Check that the compiler is in your PATH and CROSS_COMPILE is)
-   $$(warning set correctly.)
    $$(error Unable to run compiler '$(2)')
   endif
   ifneq ($$(filter %-w64-mingw32,$$($(1)_compiler_preferred_target)),)
@@ -152,7 +149,6 @@ endif
 
 # Workaround our lack of support for non-Linux HOST_CCs
 ifneq ($(HOST_CC_IS_LINUX),1)
- $(warning $$(HOST_CC) is non-Linux. Trying to work around.)
  override HOST_CC := $(HOST_CC) -D__linux__
  $(eval $(call BothConfigMake,HOST_CC,$(HOST_CC)))
 endif
@@ -176,10 +172,6 @@ define include-compiler-file
   $$(error empty arg passed to include-compiler-file)
  endif
  ifeq ($$(wildcard $$(compilers)/$(1).mk),)
-  $$(warning ******************************************************)
-  $$(warning Compiler target '$(1)' not recognised)
-  $$(warning (missing $$(compilers)/$(1).mk file))
-  $$(warning ******************************************************)
   $$(error Compiler '$(1)' not recognised)
  endif
  include $$(compilers)/$(1).mk
@@ -245,14 +237,6 @@ INTERNAL_ARCH_REMAP_target_mips32r6el := target_mips32el
 # architecture as CROSS_COMPILE.
 ifneq ($(_kernel_primary_arch),)
  ifneq ($(call remap-arch,$(TARGET_PRIMARY_ARCH)),$(call remap-arch,$(_kernel_primary_arch)))
-  $(warning ********************************************************)
-  $(warning Error: Kernel and user-mode cross compilers build for)
-  $(warning different targets)
-  $(warning $(space)$(space)CROSS_COMPILE=$(CROSS_COMPILE))
-  $(warning $(space)$(space)$(space)builds for $(TARGET_PRIMARY_ARCH))
-  $(warning $(space)$(space)KERNEL_CROSS_COMPILE=$(KERNEL_CROSS_COMPILE))
-  $(warning $(space)$(space)$(space)builds for $(_kernel_primary_arch))
-  $(warning ********************************************************)
   $(error Mismatching kernel and user-mode cross compilers)
  endif
 endif
@@ -269,14 +253,6 @@ $(eval $(call BothConfigMake,TARGET_SECONDARY_ARCH,$(TARGET_SECONDARY_ARCH)))
 $(eval $(call BothConfigMake,TARGET_ALL_ARCH,$(TARGET_ALL_ARCH)))
 $(eval $(call BothConfigMake,TARGET_FORCE_32BIT,$(TARGET_FORCE_32BIT)))
 
-$(info ******* Multiarch build: $(if $(MULTIARCH),yes,no))
-$(info ******* Primary arch:    $(if $(TARGET_PRIMARY_ARCH),$(TARGET_PRIMARY_ARCH),none))
-$(info ******* Secondary arch:  $(if $(TARGET_SECONDARY_ARCH),$(TARGET_SECONDARY_ARCH),none))
-$(info ******* PVR arch:        $(PVR_ARCH))
-$(info ******* HWDefs:          $(HWDEFS_DIR))
-$(info ******* HWDefs (all):    $(HWDEFS_ALL_PATHS))
-$(info ******* Host OS:         $(HOST_OS))
-$(info ******* Target OS:       $(TARGET_OS))
 
 ifeq ($(SUPPORT_NEUTRINO_PLATFORM),)
  # Find the paths to libgcc for the primary and secondary architectures.

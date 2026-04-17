@@ -136,7 +136,6 @@ ifeq ($(SUPPORT_ANDROID_PLATFORM)$(SUPPORT_ARC_PLATFORM),1)
   else ifeq ($(1),sync)
    # Nothing to add in this case
   else
-   $$(warning Unknown package for '$(THIS_MODULE)': $(1))
    $$(error Missing mapping between package and compiler flags)
   endif
  endef

@@ -47,10 +47,6 @@ INTERNAL_INCLUDED_PREPARE_HEADERS :=
 ifneq ($(INTERNAL_INCLUDED_PREPARE_HEADERS),true)
 missing_headers := $(strip $(shell test ! -e include/pvrversion.h && echo true))
 ifdef missing_headers
-$(info )
-$(info ** include/pvrversion.h is missing, and cannot be rebuilt.)
-$(info ** Cannot continue.)
-$(info )
 $(error Missing headers)
 endif
 endif

@@ -112,8 +112,6 @@ kernels this support must be enabled in the kernel via the \
 CONFIG_DRM_FBDEV_EMULATION option.))
   else ifeq ($(call kernel-version-at-least,4,3),true)
    ifneq ($(filter command line environment,$(origin SUPPORT_DRM_FBDEV_EMULATION)),)
-    $(warning CONFIG_DRM_FBDEV_EMULATION must be set as part of the Linux kernel build)
-    $(warning SUPPORT_DRM_FBDEV_EMULATION will be ignored)
    endif
    override undefine SUPPORT_DRM_FBDEV_EMULATION
   endif

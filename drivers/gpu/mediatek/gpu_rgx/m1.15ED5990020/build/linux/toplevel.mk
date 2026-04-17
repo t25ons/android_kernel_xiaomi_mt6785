@@ -114,9 +114,6 @@ ifneq ($(INTERNAL_CLOBBER_ONLY),true)
 # handy if your source tree is mounted over NFS or something
 override ALL_MAKEFILES := $(call relative-to-top,$(if $(strip $(ALL_MAKEFILES)),$(shell cat $(ALL_MAKEFILES)),$(shell find $(TOP) -type f -name Linux.mk -print -o -type d -name '.*' -prune)))
 ifeq ($(strip $(ALL_MAKEFILES)),)
-$(info ** Unable to find any Linux.mk files under $$(TOP). This could mean that)
-$(info ** there are no makefiles, or that ALL_MAKEFILES is set in the environment)
-$(info ** and points to a nonexistent or empty file.)
 $(error No makefiles)
 endif
 
@@ -246,8 +243,6 @@ ifeq ($(INTERNAL_CLOBBER_ONLY)$(SUPPORT_ANDROID_PLATFORM)$(SUPPORT_NEUTRINO_PLAT
   endif
 
  else ifneq ($(CROSS_COMPILE),)
-  $(info WARNING: You are not specifying how to find dependent libraries, e.g., by specifying SYSROOT.)
-  $(info          The build may fail.)
  endif
 endif
 

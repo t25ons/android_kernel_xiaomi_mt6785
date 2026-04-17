@@ -84,7 +84,6 @@ else ifeq ($(RGX_BVNC),29.12.52.208)
 else ifeq ($(RGX_BVNC),29.19.52.202)
  $(eval $(call KernelConfigC,TC_APOLLO_TCF5_29_19_52_202,))
 else ifeq ($(RGX_BVNC),$(XE_BVNC))
- $(warning WARNING $(RGX_BVNC) is currently not supported on a Linux TCF5 system)
  $(eval $(call KernelConfigC,TC_APOLLO_TCF5_BVNC_NOT_SUPPORTED,))
 endif
 

@@ -183,7 +183,6 @@ INSTALL_UM_MODULES := \
   $(if $(filter $(doc_types) module_group,$($(_m)_type)),,\
    $(if $(filter host_%,$($(_m)_arch)),,\
     $(if $($(_m)_install_path),$(_m),\
-     $(warning WARNING: UM $(_m)_install_path not defined))))))
 
 INSTALL_UM_MODULES := \
  $(sort $(INSTALL_UM_MODULES) \
@@ -254,7 +253,6 @@ INSTALL_KM_FRAGMENTS := \
   $(if $(filter-out kernel_module,$($(_m)_type)),,\
    $(if $($(_m)_install_path),\
     $(TARGET_PRIMARY_OUT)/intermediates/$(_m)/.install,\
-     $(warning WARNING: KM $(_m)_install_path not defined)))))
 
 .PHONY: install_km_debug
 install_km_debug: $(INSTALL_KM_FRAGMENTS)

@@ -132,8 +132,6 @@ ifneq ($(TARGET_2ND_ARCH),)
  ifeq ($(filter arm mips x86,$(TARGET_2ND_ARCH)),)
   $(error Unsupported secondary architecture TARGET_2ND_ARCH=$(TARGET_2ND_ARCH))
  endif
- $(warning *** 64-bit architecture detected. Enabling MULTIARCH=1.)
- $(warning *** If you want a 64-bit only build, use MULTIARCH=64only.)
  export MULTIARCH := 1
 endif
 

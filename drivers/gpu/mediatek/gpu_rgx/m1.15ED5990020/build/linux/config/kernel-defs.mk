@@ -49,7 +49,6 @@
 #
 define KernelConfigMake
 $$(shell echo "override $(1) $(if $(2),:= $(strip $(2)),:=)" >>$(CONFIG_KERNEL_MK).new)
-$(if $(filter config,$(D)),$(info KernelConfigMake $(1) := $(2)	# $(if $($(1)),$(origin $(1)),default)))
 endef
 
 # Conditionally write out a kernel GNU make option
@@ -79,7 +78,6 @@ endef
 #
 define KernelConfigC
 $$(shell echo "#define $(if $(2),$(1) $(2),$(1))" >>$(CONFIG_KERNEL_H).new)
-$(if $(filter config,$(D)),$(info KernelConfigC    #define $(1) $(2)	/* $(if $($(1)),$(origin $(1)),default) */),)
 endef
 
 # Write out kernel-only AppHint defaults as specified

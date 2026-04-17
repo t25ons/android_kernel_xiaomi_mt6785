@@ -44,7 +44,6 @@ ccflags-y += \
     -I$(srctree)/drivers/misc/mediatek/sspm/mt6781
 endif
 
-$(info $$GED: CONFIG_MTK_PLATFORM is [${CONFIG_MTK_PLATFORM}])
 #
 # mt6853 family config (mt6833)
 #
@@ -53,7 +52,6 @@ ccflags-y += -DMTK_GPUFREQ_V1
 #ccflags-y += -DGED_KPI_MET_DEBUG
 ccflags-y += -DMTK_GED_KPI
 ccflags-y += -DGED_KPI_CPU_BOOST
-$(info $$GED: CONFIG_MTK_PLATFORM is defined [${CONFIG_MTK_PLATFORM}])
 
 ifeq ($(CONFIG_MTK_GPU_COMMON_DVFS_SUPPORT),y)
 ccflags-y += -DGED_ENABLE_FB_DVFS
@@ -61,7 +59,6 @@ ccflags-y += -DGED_ENABLE_DYNAMIC_DVFS_MARGIN
 ccflags-y += -DGED_CONFIGURE_LOADING_BASE_DVFS_STEP
 ccflags-y += -DGED_ENABLE_TIMER_BASED_DVFS_MARGIN
 ccflags-y += -DGED_ENABLE_DVFS_LOADING_MODE
-$(info $$GED: CONFIG_MTK_GPU_COMMON_DVFS_SUPPORT is defined [${CONFIG_MTK_GPU_COMMON_DVFS_SUPPORT}])
 endif
 
 ccflags-y += -I$(srctree)/drivers/misc/mediatek/cmdq/v3
@@ -556,7 +553,6 @@ ifeq ($(CONFIG_MTK_TINYSYS_SSPM_SUPPORT),y)
 #ccflags-y += -DGED_SSPM
 endif
 
-#$(info $$CONFIG_MTK_GPU_COMMON_DVFS_SUPPORT is [${CONFIG_MTK_GPU_COMMON_DVFS_SUPPORT}])
 
 ifneq ($(CONFIG_FPGA_EARLY_PORTING), y)
 ifeq ($(CONFIG_MTK_GPU_COMMON_DVFS_SUPPORT),y)
@@ -567,7 +563,6 @@ else
 ccflags-y += -DGED_FDVFS_ENABLE
 endif
 else
-$(info $[GED]CONFIG_FPGA_EARLY_PORTING is [${CONFIG_FPGA_EARLY_PORTING}])
 endif
 
 ccflags-y += \

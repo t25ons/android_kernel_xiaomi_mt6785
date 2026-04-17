@@ -362,7 +362,6 @@ ifeq ($(is_at_least_nougat),1)
   ifeq ($(wildcard $(GLSLC)),)
    GLSLC := $(shell $(SHELL) -c "command -v glslc")
    ifeq ($(GLSLC),)
-    $(warning glslc could not be found.)
    endif
   endif
  endif

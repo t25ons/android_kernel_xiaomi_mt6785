@@ -368,7 +368,6 @@ ifneq ($(USE_SANITISER),)
   # Default sanitisers
   override USE_SANITISER := address,undefined
  endif
- $(info Including the following sanitisers: $(USE_SANITISER))
  ALL_CFLAGS   += -fsanitize=$(USE_SANITISER)
  ALL_CXXFLAGS += -fsanitize=$(USE_SANITISER)
  ALL_LDFLAGS  += -fsanitize=$(USE_SANITISER)
@@ -387,10 +386,6 @@ ALL_KBUILD_MODULES :=
 ALL_CXX_MODULES :=
 
 ifneq ($(TOOLCHAIN),)
-$(warning **********************************************)
-$(warning  The TOOLCHAIN option has been removed, but)
-$(warning  you have it set (via $(origin TOOLCHAIN)))
-$(warning **********************************************)
 endif
 
 # We need the glibc version to generate the cache names for LLVM and XOrg components.

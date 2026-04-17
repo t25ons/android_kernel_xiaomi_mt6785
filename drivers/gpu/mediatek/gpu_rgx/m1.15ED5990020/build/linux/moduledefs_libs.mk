@@ -71,7 +71,6 @@ ifeq ($(SUPPORT_ANDROID_PLATFORM)$(SUPPORT_ARC_PLATFORM),1)
    else ifeq ($(1),sync)
     $(THIS_MODULE)_extlibs += sync
    else
-    $$(warning Unknown package for '$(THIS_MODULE)': $(1))
     $$(error Missing mapping between package and external library)
    endif
   endef

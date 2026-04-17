@@ -320,12 +320,6 @@ PYTHON ?= python3
 else
 PYTHON ?= python2
 
-$(warning ******************************************************)
-$(warning WARNING: Python 3 not found so falling back to Python)
-$(warning 2, which is deprecated. See here for Python 2 end of)
-$(warning life information:)
-$(warning https://www.python.org/dev/peps/pep-0373/#id4)
-$(warning ******************************************************)
 endif
 
 ifneq ($(SUPPORT_BUILD_LWS),)
@@ -477,7 +471,6 @@ ifneq ($(CROSS_COMPILE),)
   override STRIP  := $(CROSS_COMPILE)$(STRIP)
  endif
 else
- $(if $(CROSS_COMPILE_SECONDARY),$(warning CROSS_COMPILE_SECONDARY is set but CROSS_COMPILE is empty))
 endif
 
 # Vanilla versions of glibc >= 2.16 print a warning if _FORTIFY_SOURCE is

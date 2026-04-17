@@ -41,28 +41,23 @@
 
 ifneq ($(filter dumpvar-%,$(MAKECMDGOALS)),)
 dumpvar-%: ;
-$(foreach _var_to_dump,$(patsubst dumpvar-%,%,$(filter dumpvar-%,$(MAKECMDGOALS))),$(info $(if $(filter undefined,$(origin $(_var_to_dump))),# $$($(_var_to_dump)) is not set,$(_var_to_dump) := $($(_var_to_dump)))))
 endif
 
 ifneq ($(filter whereis-%,$(MAKECMDGOALS)),)
 whereis-%: ;
-$(foreach _module_to_find,$(patsubst whereis-%,%,$(filter whereis-%,$(MAKECMDGOALS))),$(info $(if $(INTERNAL_MAKEFILE_FOR_MODULE_$(_module_to_find)),$(INTERNAL_MAKEFILE_FOR_MODULE_$(_module_to_find)),# No module $(_module_to_find))))
 endif
 
 ifneq ($(filter whatis-%,$(MAKECMDGOALS)),)
 whatis-$(HOST_OUT)/%: ;
 whatis-$(TARGET_PRIMARY_OUT)/%: ;
 whatis-$(TARGET_NEUTRAL_OUT)/%: ;
-$(foreach _file_to_find,$(patsubst whatis-%,%,$(filter whatis-%,$(MAKECMDGOALS))),$(info $(strip $(foreach _m,$(ALL_MODULES),$(if $(filter $(_file_to_find),$(INTERNAL_TARGETS_FOR_$(_m))),$(_file_to_find) is in $(_m) which is defined in $(INTERNAL_MAKEFILE_FOR_MODULE_$(_m)),)))))
 endif
 
 .PHONY: ls-modules
 ls-modules:
-	@: $(foreach _m,$(ALL_MODULES),$(info $($(_m)_type) $(_m) $(patsubst $(TOP)/%,%,$(INTERNAL_MAKEFILE_FOR_MODULE_$(_m)))))
 
 .PHONY: ls-types
 ls-types:
-	@: $(info $(sort $(patsubst host_%,%,$(foreach _m,$(ALL_MODULES),$($(_m)_type)))))
 
 ifeq ($(strip $(MAKECMDGOALS)),visualise)
 FORMAT ?= xlib
@@ -113,12 +108,5 @@ help:
 confighelp: ;
 
 ifneq ($(filter help,$(D)),)
-$(info Debug options)
-$(info $(space)D=modules            dump module info)
-$(info $(space)D=config             dump all config options + type and origin)
-$(info $(space)D=freeze-config      prevent config changes)
-$(info $(space)D=config-changes     dump diffs when config changes)
-$(info $(space)D=nobuild            stop before running the main build)
-$(info Options can be combined: make D=freeze-config,config-changes)
 $(error D=help given)
 endif

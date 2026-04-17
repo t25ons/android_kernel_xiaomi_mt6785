@@ -2,14 +2,6 @@
 ifneq ($(KERNELDIR),)
  ifneq ($(ARCH),i386)
   ifeq ($(shell grep -q "CONFIG_X86_32=y" $(KERNELDIR)/.config && echo 1 || echo 0),1)
-   $(warning ******************************************************)
-   $(warning Your kernel appears to be configured for 32-bit x86,)
-   $(warning but CROSS_COMPILE (or KERNEL_CROSS_COMPILE) points)
-   $(warning to a 64-bit compiler.)
-   $(warning If you want a 32-bit build, either set CROSS_COMPILE)
-   $(warning to point to a 32-bit compiler, or build with ARCH=i386)
-   $(warning to force 32-bit mode with your existing compiler.)
-   $(warning ******************************************************)
    $(error Invalid CROSS_COMPILE / kernel architecture combination)
   endif # CONFIG_X86_32
  endif # ARCH=i386

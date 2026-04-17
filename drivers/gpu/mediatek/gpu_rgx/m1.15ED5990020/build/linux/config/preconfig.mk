@@ -56,11 +56,6 @@ define newline
 endef
 
 ifneq ($(words $(TOP)),1)
-$(warning This source tree is located in a path which contains whitespace,)
-$(warning which is not supported.)
-$(warning )
-$(warning $(space)The root is: $(TOP))
-$(warning )
 $(error Whitespace found in $$(TOP))
 endif
 
@@ -71,8 +66,6 @@ _supported_values := $(2)
 _values := $$(subst $$(comma),$$(space),$$($(1)))
 _unrecognised_values := $$(strip $$(filter-out $$(_supported_values),$$(_values)))
 ifneq ($$(_unrecognised_values),)
-$$(warning *** Unrecognised value(s): $$(_unrecognised_values))
-$$(warning *** $(1) was set via: $(origin $(1)))
 $$(error Supported values are: $$(_supported_values))
 endif
 endef
@@ -113,7 +106,6 @@ ifneq ($(PVR_BUILD_DIR),$(patsubst %_android,%,$(PVR_BUILD_DIR))) # Android buil
  ifneq ($(USE_CLANG),0)
   prefer_clang := true
  else
-  $(info WARNING: USE_CLANG=0 is deprecated for Android builds)
  endif
 else
  is_android_build := false
@@ -264,7 +256,6 @@ endif
 # with that, but we'll let them know anyway.
 #
 ifeq ($(origin CROSS_COMPILE), undefined)
-$(warning CROSS_COMPILE is not set. Target components will be built with the host compiler)
 endif
 
 endif # Neutrino
@@ -275,9 +266,6 @@ define calculate-os
  else
   compiler_dumpmachine := $$(subst --,-,$$(shell $(2) -dumpmachine))
   ifeq ($$(compiler_dumpmachine),)
-   $$(warning No output from '$(2) -dumpmachine')
-   $$(warning Check that the compiler is in your PATH and CROSS_COMPILE is)
-   $$(warning set correctly.)
    $$(error Unable to run compiler '$(2)')
   endif
 
@@ -306,12 +294,9 @@ define calculate-os
    else ifneq ($$(filter none pc unknown,$$(triplet_vendor)),)
     $(1)_OS := linux
    else
-    $$(warning Unsupported compiler vendor: $$(triplet_vendor))
-    $$(warning Assuming $(1) is a standard Linux distro)
     $(1)_OS := linux
    endif
   else
-   $$(warning Could not determine $(1)_OS so assuming Linux)
    $(1)_OS := linux
   endif
  endif
@@ -364,7 +349,6 @@ endif
 # point them at the new way of doing this.
 define sanity-check-support-option-origin
 ifeq ($$(filter undefined file,$$(origin $(1))),)
-$$(warning *** Setting $(1) via $$(origin $(1)) is deprecated)
 $$(error If you are trying to disable a component, use e.g. EXCLUDED_APIS="opengles1 opengl")
 endif
 endef
@@ -382,9 +366,6 @@ _excluded_apis := $(subst $(comma),$(space),$(EXCLUDED_APIS))
 
 _unrecognised := $(strip $(filter-out $(_excludable_apis),$(_excluded_apis)))
 ifneq ($(_unrecognised),)
-$(warning *** Ignoring unrecognised entries in EXCLUDED_APIS: $(_unrecognised))
-$(warning *** EXCLUDED_APIS was set via $(origin EXCLUDED_APIS) to: $(EXCLUDED_APIS))
-$(warning *** Excludable APIs are: $(_excludable_apis))
 endif
 
 override EXCLUDED_APIS := $(filter $(_excludable_apis), $(_excluded_apis))
@@ -413,7 +394,6 @@ ifeq ($(RGX_BVNC),)
  endif
 else
  ifneq ($(PVR_ARCH),)
-  $(warning PVR_ARCH ($(PVR_ARCH)) is specified when RGX_BVNC ($(RGX_BVNC)) is also specified - ignoring PVR_ARCH)
  endif
 # Extract the BNC config name
 RGX_BNC_SPLIT := $(subst .,$(space) ,$(RGX_BVNC))

@@ -347,26 +347,12 @@ $(eval $(call BothConfigMake,PVR_ARCH,$(PVR_ARCH)))
 
 ifneq ($(SUPPORT_BUILD_LWS),)
  ifneq ($(SYSROOT),)
-  $(warning ******************************************************)
-  $(warning WARNING: You have specified a SYSROOT, or are using a)
-  $(warning buildroot compiler, and enabled SUPPORT_BUILD_LWS. We)
-  $(warning will ignore the sysroot and will build all required)
-  $(warning LWS components. Unset SUPPORT_BUILD_LWS if this is not)
-  $(warning what you want.)
-  $(warning ******************************************************)
  endif
 
  ifneq ($(origin SUPPORT_BUILD_LWS),file)
-  $(warning ******************************************************)
-  $(warning WARNING: Enabling SUPPORT_BUILD_LWS is deprecated.)
   ifneq ($(filter surfaceless wayland xorg,$(WINDOW_SYSTEM)),)
-   $(warning You should not need to set this explicitly.)
   else
-   $(warning You should be setting SYSROOT instead, which is)
-   $(warning documented in the Rogue DDK Linux and Rogue DDK)
-   $(warning Linux WS Platform Guides.)
   endif
-  $(warning ******************************************************)
  endif
 
  override SYSROOT :=
@@ -384,7 +370,6 @@ ifeq ($(SUPPORT_BUILD_LWS),1)
  COMPONENTS += ${LWS_COMPONENTS}
 endif
 
-$(if $(filter config,$(D)),$(info Build configuration:))
 
 ################################# CONFIG ####################################
 
@@ -448,12 +433,10 @@ KERNEL_AUTOCONF := \
  $(strip $(wildcard $(KERNELDIR)/include/linux/autoconf.h) \
          $(wildcard $(KERNELDIR)/include/generated/autoconf.h))
 ifeq ($(KERNEL_AUTOCONF),)
-$(warning autoconf.h not found in $$(KERNELDIR)/include/linux \
 or $$(KERNELDIR)/include/generated. Check your $$(KERNELDIR) variable \
 and kernel configuration.)
 endif
 else
-$(if $(KERNEL_COMPONENTS),$(warning KERNELDIR is not set. Kernel components cannot be built))
 endif
 
 # Platforms can make use of the ChromiumOS upstream kernels. Make the build
@@ -507,7 +490,6 @@ ifeq ($(RGX_FW_SIGNED),1)
     $(error RGX_FW_X509 must be set for RGX_FW_SIGNED=1.)
   endif # !RGX_FW_X509
  else
-  $(warning Firmware signing is not implemented for kernels < 4.9. Signing will not be done!!)
   override RGX_FW_SIGNED := 0
  endif # ($(call kernel-version-at-least,4,9),true)
 else  # RGX_FW_SIGNED
@@ -534,7 +516,6 @@ ifneq ($(SUPPORT_ANDROID_PLATFORM),1)
  ifeq ($(wildcard ${TOP}/build/linux/tools/prepare-llvm.sh),)
   # No facility for using LLVM in this package.
  else ifeq ($(LLVM_BUILD_DIR),)
-  $(warning LLVM_BUILD_DIR is not set. Components that use it (e.g. OpenCL, Vulkan) cannot be built)
  else
   override LLVM_BUILD_DIR := $(abspath $(LLVM_BUILD_DIR))
   ifeq ($(SUPPORT_NEUTRINO_PLATFORM),1)
@@ -544,12 +525,10 @@ ifneq ($(SUPPORT_ANDROID_PLATFORM),1)
   endif
 
   ifneq ($(filter Error:,$(firstword $(LLVM_MESSAGE))),)
-   $(info  *** prepare-llvm.sh: $(LLVM_MESSAGE))
    $(error *** LLVM_BUILD_DIR $(LLVM_BUILD_DIR) is not suitable)
   endif
 
   ifneq ($(filter Warning:,$(firstword $(LLVM_MESSAGE))),)
-   $(info  *** prepare-llvm.sh: $(LLVM_MESSAGE))
   endif
 
   # Because we need to handle MULTIARCH builds, we can't work out the
@@ -586,8 +565,6 @@ ifneq ($(SUPPORT_ANDROID_PLATFORM),1)
  LLVM_MESSAGE=$(shell ANDROID_SDK_ROOT=$(ANDROID_SDK_ROOT) ${TOP}/build/linux/tools/prepare-llvm-android.sh -a verify -t "$(JNI_CPU_ABI) $(JNI_CPU_ABI_2ND)")
 
  ifneq ($(filter Warning:,$(firstword $(LLVM_MESSAGE))),)
-  $(info  *** prepare-llvm-android.sh: $(LLVM_MESSAGE))
-  $(info *** Please update your VNDK with the newer LLVM version. )
  endif
 endif
 
@@ -609,12 +586,10 @@ ifneq ($(SUPPORT_ANDROID_PLATFORM),1)
   NNVM_MESSAGE=$(shell ARCH=${ARCH} CROSS_COMPILE=${CROSS_COMPILE} ${TOP}/build/linux/tools/prepare-nnvm.sh -c $(NNVM_BUILD_DIR))
 
   ifneq ($(filter Error:,$(firstword $(NNVM_MESSAGE))),)
-   $(info  *** prepare-nnvm.sh: $(NNVM_MESSAGE))
    $(error *** NNVM_BUILD_DIR $(NNVM_BUILD_DIR) is not suitable)
   endif
 
   ifneq ($(filter Warning:,$(firstword $(NNVM_MESSAGE))),)
-   $(info  *** prepare-nnvm.sh: $(NNVM_MESSAGE))
   endif
 
   # Because we need to handle MULTIARCH builds, we can't work out the
@@ -836,7 +811,6 @@ libunwind._\
 ))
 ifeq ($(PVRSRV_NEED_PVR_STACKTRACE),1)
 ifeq ($(SUPPORT_ANDROID_PLATFORM),1)
-$(warning Since Android O it's not allowed to link to libunwind.)
 endif
 endif
 $(eval $(call TunableBothConfigC,REFCOUNT_DEBUG,))
@@ -909,7 +883,6 @@ Enable usage of hardware performance counters for metrics on ARM platforms._\
 ifeq ($(SHADER_DEBUG_TOOL),1)
  ifneq ($(GTRACE_TOOL),1)
   override GTRACE_TOOL = 1
-  $(warning SHADER_DEBUG_TOOL requires GTRACE_TOOL, so GTRACE_TOOL is being enabled.)
  endif
 endif
 ifeq ($(GTRACE_TOOL),1)

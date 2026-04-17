@@ -52,11 +52,9 @@ endef
 
 define print-option-help
 # Print the option name and value
-$(info $(1) ($(if $($(1)),$(call abbrev-option-value,$($(1))),<unset>), default $(if $(INTERNAL_CONFIG_DEFAULT_FOR_$(1)),$(call abbrev-option-value,$(INTERNAL_CONFIG_DEFAULT_FOR_$(1))),<unset>))$(if $(INTERNAL_DESCRIPTION_FOR_$(1)),:,))
 # Ensure the config help text ends with a newline
 $(and $(INTERNAL_DESCRIPTION_FOR_$(1)),$(if $(filter %_,$(word $(words $(INTERNAL_DESCRIPTION_FOR_$(1))),$(INTERNAL_DESCRIPTION_FOR_$(1)))),,$(eval INTERNAL_DESCRIPTION_FOR_$(1) := $(INTERNAL_DESCRIPTION_FOR_$(1))_ )))
 # Print the config help text
-$(info $(empty)  $(subst _ ,$(newline)  ,$(INTERNAL_DESCRIPTION_FOR_$(1))))
 endef
 
 .PHONY: confighelp allconfighelp
@@ -70,5 +68,4 @@ allconfighelp:
 
 ifneq ($(filter confighelp-%,$(MAKECMDGOALS)),)
 confighelp-%:
-	@: $(if $(filter $*,$(ALL_TUNABLE_OPTIONS)),$(call print-option-help,$*),$(info $* is not a tunable config option))
 endif

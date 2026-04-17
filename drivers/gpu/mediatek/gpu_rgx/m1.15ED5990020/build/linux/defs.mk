@@ -222,7 +222,6 @@ $(call kernel-cc-option,-W$(if $(W),,no-)$(patsubst -W%,%,$(patsubst -Wno-%,%,$(
 endef
 
 define module-info-line
-$(if $(filter modules,$(D)),$(info [$(THIS_MODULE)] <$(MODULE_ARCH)> $(1)),)
 endef
 
 # $(call if-exists,A,B) => A if A is a file which exists, otherwise B
