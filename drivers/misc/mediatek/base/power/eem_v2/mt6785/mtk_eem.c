@@ -371,6 +371,7 @@ static int get_devinfo(void)
 		val[p->mtdes_index] |= (tmp << p->mtdes_shift);
 	}
 
+#if 0
 	/*
 	 * One-line
 	 */
@@ -398,6 +399,7 @@ static int get_devinfo(void)
 
 	/* Big_Low */
 	aee_rr_rec_ptp_cpu_2_little_volt_1(pi_efuse_idx[4].orig_mbb);
+#endif
 #endif
 #endif
 
