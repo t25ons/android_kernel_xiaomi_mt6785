@@ -159,31 +159,24 @@ static signed int fm_lock_try(struct fm_lock *thiz, signed int retryCnt)
 {
 	signed int retry_cnt = 0;
 	struct semaphore *sem;
-	struct task_struct *task = current;
 
 	if (thiz == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 	if (thiz->priv == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 
 	while (down_trylock((struct semaphore *)thiz->priv)) {
-		WCN_DBG(FM_WAR | MAIN, "down_trylock failed\n");
 		if (++retry_cnt < retryCnt) {
-			WCN_DBG(FM_WAR | MAIN, "[retryCnt=%d]\n", retry_cnt);
 			msleep_interruptible(50);
 			continue;
 		} else {
-			WCN_DBG(FM_CRT | MAIN, "down_trylock retry failed\n");
 			return -FM_ELOCK;
 		}
 	}
 
 	sem = (struct semaphore *)thiz->priv;
-	WCN_DBG(FM_NTC | MAIN, "%s --->trylock, cnt=%d, pid=%d\n", thiz->name, (int)sem->count, task->pid);
 	return 0;
 }
 
@@ -191,44 +184,33 @@ static signed int fm_lock_try(struct fm_lock *thiz, signed int retryCnt)
 static signed int fm_lock_lock(struct fm_lock *thiz)
 {
 	struct semaphore *sem;
-	struct task_struct *task = current;
 
 	if (thiz == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 	if (thiz->priv == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 
 	if (down_interruptible((struct semaphore *)thiz->priv)) {
-		WCN_DBG(FM_CRT | MAIN, "get mutex failed\n");
 		return -FM_ELOCK;
 	}
 
 	sem = (struct semaphore *)thiz->priv;
-	WCN_DBG(FM_DBG | MAIN, "%s --->lock, cnt=%d, pid=%d\n",
-	    thiz->name, (int)sem->count, task->pid);
 	return 0;
 }
 
 static signed int fm_lock_unlock(struct fm_lock *thiz)
 {
 	struct semaphore *sem;
-	struct task_struct *task = current;
 
 	if (thiz == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 	if (thiz->priv == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 	sem = (struct semaphore *)thiz->priv;
-	WCN_DBG(FM_DBG | MAIN, "%s <---unlock, cnt=%d, pid=%d\n",
-	    thiz->name, (int)sem->count + 1, task->pid);
 	up((struct semaphore *)thiz->priv);
 	return 0;
 }
@@ -240,13 +222,11 @@ struct fm_lock *fm_lock_create(const signed char *name)
 
 	tmp = fm_zalloc(sizeof(struct fm_lock));
 	if (!tmp) {
-		WCN_DBG(FM_ALT | MAIN, "fm_zalloc(fm_lock) -ENOMEM\n");
 		return NULL;
 	}
 
 	mutex = fm_zalloc(sizeof(struct semaphore));
 	if (!mutex) {
-		WCN_DBG(FM_ALT | MAIN, "fm_zalloc(struct semaphore) -ENOMEM\n");
 		fm_free(tmp);
 		return NULL;
 	}
@@ -266,7 +246,6 @@ struct fm_lock *fm_lock_create(const signed char *name)
 signed int fm_lock_get(struct fm_lock *thiz)
 {
 	if (thiz == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 	thiz->ref++;
@@ -276,7 +255,6 @@ signed int fm_lock_get(struct fm_lock *thiz)
 signed int fm_lock_put(struct fm_lock *thiz)
 {
 	if (thiz == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 	thiz->ref--;
@@ -295,37 +273,26 @@ signed int fm_lock_put(struct fm_lock *thiz)
 /* fm lock methods */
 static signed int fm_spin_lock_lock(struct fm_lock *thiz)
 {
-	struct task_struct *task = current;
-
 	if (thiz == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 	if (thiz->priv == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 
 	spin_lock_bh((spinlock_t *) thiz->priv);
-
-	WCN_DBG(FM_DBG | MAIN, "%s --->lock pid=%d\n", thiz->name, task->pid);
 	return 0;
 }
 
 static signed int fm_spin_lock_unlock(struct fm_lock *thiz)
 {
-	struct task_struct *task = current;
-
 	if (thiz == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 	if (thiz->priv == NULL) {
-		WCN_DBG(FM_ERR | MAIN, "%s,invalid pointer\n", __func__);
 		return -FM_EPARA;
 	}
 
-	WCN_DBG(FM_DBG | MAIN, "%s <---unlock, pid=%d\n", thiz->name, task->pid);
 	spin_unlock_bh((spinlock_t *) thiz->priv);
 	return 0;
 }
